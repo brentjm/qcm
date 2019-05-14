@@ -1,0 +1,51 @@
+version: '3.5'
+services:
+
+  postgres:
+    build: ./postgres
+    image: postgres-custom
+    container_name: postgres
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+    networks:
+      - app
+
+  nodered:
+    build: ./node-red
+    image: node-red-custom
+    container_name: node-red
+    volumes:
+      - type: volume
+        source: node-red-data
+        target: /data
+    networks:
+      - app      
+    ports:
+      - "1880:1880"
+
+  grafana:
+    build: ./grafana
+    image: grafana-custom
+    container_name: grafana
+    volumes:
+      - type: volume
+        source: grafana-data
+        target: /var/lib/grafana
+    networks:
+      - app      
+    ports:
+      - "3000:3000"
+
+volumes:
+  node-red-data:
+  postgres-data:
+  grafana-data:
+
+networks:
+  app:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.1/27
