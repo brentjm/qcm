@@ -5,6 +5,7 @@ services:
     build: ./postgres
     image: postgres-custom
     container_name: postgres
+    restart: always
     volumes:
       - type: volume
         source: postgres-data
@@ -16,6 +17,9 @@ services:
     build: ./node-red
     image: node-red-custom
     container_name: node-red
+    restart: always
+    depends_on:
+      - postgres
     volumes:
       - type: volume
         source: node-red-data
@@ -24,11 +28,16 @@ services:
       - app      
     ports:
       - "1880:1880"
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
 
   grafana:
     build: ./grafana
     image: grafana-custom
     container_name: grafana
+    restart: always
+    depends_on:
+      - postgres
     volumes:
       - type: volume
         source: grafana-data
