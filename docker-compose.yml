@@ -15,7 +15,7 @@ services:
 
   nodered:
     build: ./node-red
-    image: node-red-custom
+    image: node-red-custom:v1
     container_name: node-red
     restart: always
     depends_on:
@@ -24,6 +24,9 @@ services:
       - type: volume
         source: node-red-data
         target: /data
+      - type: bind
+        source: /home/pi/qcm/node-red/userdata
+        target: /userdata
     networks:
       - app      
     ports:
